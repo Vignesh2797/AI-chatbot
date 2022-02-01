@@ -1,0 +1,271 @@
+{% extends "layout.html" %}
+
+{% set title = "Chatbot" %}
+
+{% block body %}
+<div class="icon" id="chatbot-icon" style="display: block;">
+  <img class="bot" src="../static/assets/images/bot.png">
+</div>
+<div class="chatbox" id="chatbox" style="display: none;">
+  <div>
+    <div class="title">
+      <img class="chatty" src="../static/assets/images/bot.svg">
+      <h5 class="heading">Chatty</h5>
+      <span class="dot"></span>
+      <i class="far fa-window-maximize" id="maximise"></i>
+      <i class="fas fa-window-minimize" id="minimise" style="display: none;"></i>
+      <i class="fas fa-times" id="close"></i>
+    </div>
+    <div class="message-container"></div>
+    <form action method="POST">
+      <input class="to-send" placeholder="Write a message..." type="text" />
+      <input class="send" type="submit" value />
+      <img id="microphone" role="button" src="../static/assets/images/microphone.svg">
+    </form>
+  </div>
+
+</div>
+<div class="modal fade" id="contingencymodal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img class="contingencymodalimage" src="../static/assets/task3/image.png">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="disruptionmodal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <img class="disruptionmodalimage" id="disruptionmodalimage">
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script crossorigin="anonymous" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js">
+</script>
+
+<script>
+  $(document).ready(function () {
+    $("#chatbot-icon").click(function () {
+      if ($("#chatbox:visible").length == 0) {
+        $("#chatbox").css("display", "block")
+      } else {
+        $("#chatbox").css("display", "none")
+      }
+
+    })
+
+    $("#close").click(function () {
+      $("#chatbox").css("display", "none")
+    })
+  })
+</script>
+
+<script>
+  $(document).ready(function () {
+    $('#maximise').click(function () {
+      $('#minimise').css('display', 'block')
+      $('#maximise').css('display', 'none')
+      $('.chatbox').css('height', '100%')
+      $('.message-container').addClass('maximise')
+    })
+
+    $('#minimise').click(function () {
+      $('#maximise').css('display', 'block')
+      $('#minimise').css('display', 'none')
+      $('.chatbox').css('height', '60%')
+      $('.message-container').removeClass('maximise')
+    })
+  })
+</script>
+
+<script type="text/javascript">
+
+  var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+  socket.on('connect', function () {
+    var form = $('form').on('submit', function (e) {
+      e.preventDefault();
+      let user_input = $('input.to-send').val();
+      if (user_input) {
+        socket.emit('client_message', { message: user_input });
+        $('input.to-send').val('').focus();
+      }
+    });
+  });
+
+
+  function scroll_to_bottom() {
+    var container = $('.message-container');
+    var height = container[0].scrollHeight;
+    container.scrollTop(height);
+  }
+
+
+  function display(type, json, val) {
+    if (val == "received") {
+      $('div.message-container').append('<div class="animate__animated animate__fadeInDown message ' + type + '"><span>' + json.message + '</span><div class="time">' + json.time_sent + '</div></div></div>');
+      scroll_to_bottom()
+    } else if (val == "sent") {
+      $('div.message-container').append('<div class="animate__animated animate__fadeInDown message ' + type + '"><span>' + json.message + '</span><div class="time">' + json.time_sent + '</div></div></div>');
+      scroll_to_bottom()
+    }
+  }
+
+
+  socket.on('user_response', function (json) {
+    display('sent', json, "sent")
+  });
+
+
+  socket.on('bot_response', function (json) {
+    display('received', json, "received")
+  });
+
+
+  socket.on('display ticket', function (json) {
+    $('div.message-container').append('<div class="ticket"><div class="header">' + json.fareProvider + '</div><ul><li><span>' + json.departureStationName + '</span><svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path fill="currentColor" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg></svg><span>' + json.arrivalStationName + '</span></li><li><span data="Depart at">' + json.departureTime + '</span><span data="Arrive at">' + json.arrivalTime + '</span><span data="Duration">' + json.duration + '</span><span data="Changes">' + json.changes + '</span></li><li><span data="Depart Date">' + json.departDate + '</span><span data="Ticket Price">£' + json.ticketPrice + '</span></li><li><a href=' + json.url + ' target="_blank">' + json.url + '</a></li>' + (json.isReturn ? '<li><span data="Return Date">' + json.returnDate + '</span><span>' + json.returnTicketType + '</span></li>' : '') + '</ul></div>');
+    scroll_to_bottom()
+  });
+
+  socket.on('show delay', function (json) {
+    $('div.message-container').append('<div class="animate__animated animate__fadeInDown message received"><span> The Train will arrive at the destination station with a delay of ' + json.message + ' minutes</span><div class="time">' + json.time_sent + '</div></div></div>');
+  })
+
+  socket.on('contingency plans', function (json) {
+    $('div.message-container').append('<div class="animate__animated animate__fadeInDown message received"><p>Principle Service Alteration</p><p>' + json[0] + '</p><p>Alternate Passenger Journey</p><p>' + json[1] + '</p><p>Signaller Info</p><p>' + json[2] + '</p><p>Station Staff Info</p><p>' + json[3] + '</p><p>Passenger Info</p><p>' + json[4] + '</p></div><div class="animate__animated animate__fadeInDown message received"><img type="button" data-toggle="modal" data-target="#contingencymodal" id="contingencyimg" class="contingency_image" src="../static/assets/task3/image.png"></div></div>');
+  })
+
+  socket.on('disruption plans', function (json) {
+    val = '../static/assets/data/selected_image/' + json[3] + '.png'
+    document.getElementById('disruptionmodalimage').src = val
+
+    a = b = c = d = x = y = ''
+    json[0].forEach(element => {
+      element.forEach(i => {
+        e = '<td>' + i + '</td>'
+        a = a + e
+      })
+      b = b + '<tr>' + a + '</tr>'
+      a = ''
+    });
+
+    json[1].forEach(element => {
+      element.forEach(i => {
+        e = '<td>' + i + '</td>'
+        c = c + e
+      })
+      d = d + '<tr>' + c + '</tr>'
+      c = ''
+    })
+
+    json[2].forEach(element => {
+      element.forEach(i => {
+        e = '<td>' + i + '</td>'
+        x = x + e
+      })
+      y = y + '<tr>' + x + '</tr>'
+      x = ''
+    })
+    const table1 = '<table class="disruption_tables"><thead><th>ID</th><th>Station Name</th><th>Telephone Number</th><th>Times</th></thead><tbody>' + b + '</tbody></table>'
+    const table2 = '<table class="disruption_tables"><thead><th>ID</th><th>Destination</th><th>Route Type</th><th>Route Info</th></thead><tbody>' + d + '</tbody></table>'
+    const table3 = '<table class="disruption_tables"><thead><th>ID</th><th>Issue</th><th>Tip</th></thead><tbody>' + y + '</tbody></table>'
+    $('div.message-container').append('<div class="animate__animated animate__fadeInDown message received"><p><b>Other Station Support Info</b></p>' + table1 + '<p><b>Alternate Transport Info</b></p>' + table2 + '<p><b>Station Tips Info</b></p>' + table3 + '</div><div class="animate__animated animate__fadeInDown message received"><img type="button" data-toggle="modal" data-target="#disruptionmodal" id="disruptionimg" class="disruption_image" src="../static/assets/data/selected_image/' + json[3] + '.png"></div></div>');
+  })
+</script>
+
+<script>
+  var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+  var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+  var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent;
+
+  var phrasePara = document.querySelector('.phrase');
+  var resultPara = document.querySelector('.result');
+  var diagnosticPara = document.querySelector('.output');
+
+  var testBtn = document.getElementById('microphone');
+
+  function randomPhrase() {
+    var number = Math.floor(Math.random() * phrases.length);
+    return number;
+  }
+
+  function testSpeech() {
+    testBtn.disabled = true;
+    testBtn.textContent = 'Test in progress';
+
+
+    var recognition = new SpeechRecognition();
+    recognition.lang = 'en-GB';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.start();
+
+    recognition.onresult = function (event) {
+      var speechResult = event.results[0][0].transcript.toLowerCase();
+      console.log(speechResult)
+      socket.emit('message sent', { message: speechResult });
+    }
+
+    recognition.onspeechend = function () {
+      recognition.stop();
+      testBtn.disabled = false;
+      testBtn.textContent = 'Start new test';
+    }
+
+    recognition.onerror = function (event) {
+      testBtn.disabled = false;
+      testBtn.textContent = 'Start new test';
+      diagnosticPara.textContent = 'Error occurred in recognition: ' + event.error;
+    }
+
+    recognition.onaudiostart = function (event) {
+      //Fired when the user agent has started to capture audio.
+      console.log('SpeechRecognition.onaudiostart');
+    }
+
+    recognition.onaudioend = function (event) {
+      //Fired when the user agent has finished capturing audio.
+      console.log('SpeechRecognition.onaudioend');
+    }
+
+    recognition.onend = function (event) {
+      //Fired when the speech recognition service has disconnected.
+      console.log('SpeechRecognition.onend');
+    }
+
+    recognition.onnomatch = function (event) {
+      //Fired when the speech recognition service returns a final result with no significant recognition. This may involve some degree of recognition, which doesn't meet or exceed the confidence threshold.
+      console.log('SpeechRecognition.onnomatch');
+    }
+
+    recognition.onsoundstart = function (event) {
+      //Fired when any sound — recognisable speech or not — has been detected.
+      console.log('SpeechRecognition.onsoundstart');
+    }
+
+    recognition.onsoundend = function (event) {
+      //Fired when any sound — recognisable speech or not — has stopped being detected.
+      console.log('SpeechRecognition.onsoundend');
+    }
+
+    recognition.onspeechstart = function (event) {
+      //Fired when sound that is recognised by the speech recognition service as speech has been detected.
+      console.log('SpeechRecognition.onspeechstart');
+    }
+    recognition.onstart = function (event) {
+      //Fired when the speech recognition service has begun listening to incoming audio with intent to recognize grammars associated with the current SpeechRecognition.
+      console.log('SpeechRecognition.onstart');
+    }
+  }
+
+  testBtn.addEventListener('click', testSpeech);
+
+</script>
+{% endblock %}

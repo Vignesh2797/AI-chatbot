@@ -1,0 +1,95 @@
+{
+  "greeting": ["Hello there. My name is Chatty. I am here to help you."],
+  "username": ["What's your name?", "What should I call you?"],
+  "service_type": [
+    "Hi %s. Select the type of service? (booking or delay)",
+    "Hello %s. Kindly select the type of service of your choice? (booking or delay)"
+  ],
+  "error": [
+    "Sorry, I don't understand.",
+    "Oops! I don't understand."
+  ],
+
+  "location": [
+    "Where are you planning on travelling from and to?",
+    "What are your source and destination stations?"
+  ],
+  "only_one_location": [
+    "Sorry! We need both locations, not just one!",
+    "Oops! We need both locations, not just one!"
+  ],
+  "wrong_date": [
+    "Sorry, the date you entered cannot be recognised.",
+    "Oops! The date entered cannot be recognised."
+  ],
+  "past_date": [
+    "Sorry! Date must not be in the past.",
+    "Oops! Date must not be in the past."
+  ],
+  "past_depart_date": [
+    "Sorry! Date given is older than depart date.",
+    "Oops! Date must be after depart date."
+  ],
+  "departdate": [
+    "What date would you like to leave on?",
+    "What date would you like to depart?"
+  ],
+  "departtime": ["What time would you like to leave at?"],
+
+  "if_return": [
+    "Do you want a return jouney?",
+    "Would you like a return jouney?"
+  ],
+  "returndate": [
+    "What date would you like to come back on?",
+    "What date would you like to return?"
+  ],
+  "returntime": ["What time would you like to return at?"],
+
+  "single_ticket": ["Here is the cheapest single ticket we could find!"],
+  "return_ticket": ["Here is the cheapest return ticket we could find!"],
+  "ticket_error": [
+    "Sorry, we could not find any results for the ticket you were looking for.",
+    "Sorry, we could not find any tickets for the jouney you are searching for."
+  ],
+  "make_another_booking": [
+    "Would you like to see another cheapest ticket or find delays?"
+  ],
+  "thank_you": [
+    "Thank you for using our services!",
+    "Thank you for using the chatbot!"
+  ],
+  "whats_next": [
+    "Would you like to book another ticket or see different potential train delays?",
+    "Do you now want to book a different ticket or see different train delays?"
+  ],
+
+  "ask_predict_location": [
+    "What are the origin and the destination locations of the train you would like to see the predicted arrival time for?"
+  ],
+  "ask_predict_delay": [
+    "How long of a delay has there been on the train (in minutes)?"
+  ],
+  "ask_current_station": [
+    "Which station between Weymouth to Waterloo are you at the moment?"
+  ],
+  "prediction": [
+    "Your train is estimated to arrive on %s at your destination.",
+    "Your train is predicted to arrive on %s at your destination."
+  ],
+  "prediction_error": [
+    "Sorry! We were unable to predict the arrival time.",
+    "Sorry! We were unable to estimate the arrival time."
+  ],
+  "ask_eventType": ["What is the type of event that occured?"],
+  "ask_contingency_location": [
+    "The contingency happened between which two stations?"
+  ],
+  "ask_contingency_time": ["What was the time when the contingency occured?"],
+  "ask_severity": [
+    "What is severity of the contingency? ( Full or partial blockage )"
+  ],
+  "ask_disruption_station": [
+    "Which station do you want to check the disruption plan?"
+  ]
+}

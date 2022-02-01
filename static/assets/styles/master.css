@@ -1,0 +1,538 @@
+html,
+body {
+  font-family: sans-serif !important;
+  color: #000;
+  background-color: #f2f2f2;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  -webkit-animation: bugfix infinite 1s;
+  font-size: 16px;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+}
+
+@-webkit-keyframes bugfix {
+  from {
+    padding: 0;
+  }
+  to {
+    padding: 0;
+  }
+}
+
+.os-condensed {
+  font-family: sans-serif;
+  text-decoration: none;
+}
+
+/* Transition */
+.transition-2ms {
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+/* ------------------------------------ Header ------------------------------------ */
+/* Header stylings */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 200;
+  margin: 0;
+  overflow: hidden;
+}
+h4 {
+  line-height: 22px;
+}
+
+main {
+  position: relative;
+  height: 100%;
+  padding: 8% 16px;
+  background-image: url(../images/chatbot.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.chatbox {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  max-width: 512px;
+  height: 60%;
+  min-height: 64px;
+  padding-bottom: 16px;
+  background-color: #313440;
+}
+.chatbox > div {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.chatbox > div > .message-container::-webkit-scrollbar {
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+  width: 4px;
+  height: 1px;
+  z-index: 2;
+}
+.chatbox > div > .message-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chatbox > div > .message-container::-webkit-scrollbar-thumb {
+  background: #b3ada7;
+}
+
+.chatbox > div > .message-container {
+  height: calc(63%);
+  overflow-x: hidden;
+  margin-bottom: 8px;
+  padding: 0 16px;
+  margin-top: 16px;
+  box-shadow: 0px 5px 10px 0 #292c39;
+}
+
+/* --- Messages --- */
+.message {
+  padding: 8px;
+  position: relative;
+  min-height: 34px;
+  clear: both;
+  margin: 8px 0;
+  max-width: 80%;
+  border-radius: 15px;
+  word-wrap: break-word;
+}
+.message.received {
+  background: #3387e5;
+  float: left;
+  color: #fff;
+  border-bottom-left-radius: 0px;
+  animation-delay: 0.5s;
+}
+
+.message.sent {
+  background: #242529;
+  float: right;
+  margin-right: 5px;
+  color: #fff;
+  border-bottom-right-radius: 0px;
+}
+
+.time {
+  display: inline-block;
+  float: right;
+  position: relative;
+  color: #fff;
+  font-size: 11px;
+  padding: 0 0 0 8px;
+  bottom: -4px;
+}
+
+/* --- Inputs --- */
+.chatbox > div > form {
+  position: absolute;
+  bottom: 0;
+  width: 90%;
+  background-color: #242529;
+  border-radius: 30px;
+  overflow: hidden;
+  margin-left: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.chatbox > div > form > .to-send {
+  width: 100%;
+  height: 100%;
+  padding: 12px 42px 12px 12px;
+  border: 0;
+  outline: none;
+  background-color: inherit;
+  color: #fff;
+}
+
+.chatbox > div > form .send {
+  position: absolute;
+  top: 8px;
+  right: 50px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+  background-image: url("/static/assets/images/send.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+::placeholder {
+  color: #fff;
+}
+
+.ticket {
+  width: 300px;
+  position: relative;
+  border-radius: 8px;
+  clear: both;
+  overflow: hidden;
+  border-bottom: 8px solid #ea3c43;
+  box-shadow: 0px 0px 8px #5f6067;
+}
+.ticket > .header {
+  padding: 8px;
+  background: #ea3c43;
+  text-align: center;
+  color: #fff;
+  font-weight: 500;
+}
+.ticket > ul {
+  list-style-type: none;
+  padding: 0px;
+  color: #fff;
+}
+.ticket > ul > li {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 8px;
+  border-bottom: 1px solid #5f6067;
+}
+.ticket > ul > li > span {
+  position: relative;
+  font-weight: bold;
+}
+.ticket > ul > li:nth-child(1) > .arrow {
+  height: 16px;
+  width: 16px;
+  margin: 4px;
+  color: #fff;
+}
+
+.ticket > ul > li:nth-child(2) {
+  padding: 30px 16px 16px;
+}
+.ticket > ul > li:not(:nth-child(1)) > span {
+  min-width: 48px;
+}
+.ticket > ul > li:not(:nth-child(1)) > span:after {
+  top: -16px;
+  left: 0;
+  position: absolute;
+  content: attr(data);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: normal;
+  font-size: 12px;
+}
+.ticket > ul > li:nth-child(3) {
+  margin-top: 16px;
+}
+.ticket > ul > li:nth-child(3) > span:nth-child(2) {
+  min-width: 62px;
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+}
+.relative {
+  position: relative;
+}
+.bold {
+  font-weight: bold !important;
+}
+.size156 {
+  font-size: 156px;
+}
+.size96 {
+  font-size: 96px;
+}
+.size64 {
+  font-size: 64px;
+}
+.size48 {
+  font-size: 48px;
+}
+.size32 {
+  font-size: 32px;
+}
+.text-indent32 {
+  text-indent: 32px;
+}
+.margin-top-4px {
+  margin-top: 4px;
+}
+.margin-top-16px {
+  margin-top: 16px;
+}
+
+footer {
+  text-align: center;
+}
+
+@media screen and (max-width: 512px) {
+  .container {
+    width: 100%;
+  }
+}
+
+.title {
+  text-align: center;
+  color: #fff;
+  background-color: #313440;
+  padding: 10px 0;
+  box-shadow: 0px 5px 10px 0 #292c39;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.bot {
+  width: 70px;
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  cursor: pointer;
+}
+
+#close {
+  right: 15px;
+  position: absolute;
+  cursor: pointer;
+}
+
+#maximise {
+  right: 50px;
+  position: absolute;
+  cursor: pointer;
+}
+
+#minimise {
+  right: 50px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.maximise {
+  height: calc(78%) !important;
+}
+
+.chatty {
+  width: 50px;
+}
+
+.heading {
+  margin-bottom: 0px !important;
+  margin-left: 5px;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: #05b714;
+  border-radius: 50%;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+#microphone {
+  position: relative;
+  margin-right: 10px;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.contingency_image {
+  width: 250px;
+  cursor: pointer;
+}
+
+.contingencymodalimage {
+  width: 300px;
+}
+
+.disruption_image {
+  width: 350px;
+}
+
+.modal-dialog {
+  max-width: fit-content !important;
+}
+
+
+.disruption_tables {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.disruption_tables thead th,
+.disruption_tables tbody tr td {
+  border: 1px solid #ffffff;
+}
+
+@media (min-width: 0px) and (max-width: 375px) {
+  .chatbox > div > .message-container {
+    height: calc(63%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+  }
+}
+
+@media (min-width: 376px) and (max-width: 575px) {
+  .chatbox > div > .message-container {
+    height: calc(70%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+  }
+
+  .maximise {
+    height: calc(83%) !important;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .chatbox > div > .message-container {
+    height: calc(80%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+  }
+
+  .maximise {
+    height: calc(88%) !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .chatbox > div > .message-container {
+    height: calc(79%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+    font-size: 12px;
+  }
+
+  .maximise {
+    height: calc(86%) !important;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .chatbox > div > .message-container {
+    height: calc(58%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+  }
+
+  .maximise {
+    height: calc(75%) !important;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1800px) {
+  .chatbox > div > .message-container {
+    height: calc(65%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+  }
+}
+
+@media (min-width: 1800px) and (max-width: 2500px) {
+  .chatbox > div > .message-container {
+    height: calc(85%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+  }
+
+  .maximise {
+    height: calc(75%) !important;
+  }
+
+  .chatbox {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    max-width: 768px;
+    height: 60%;
+    min-height: 64px;
+    padding-bottom: 16px;
+    font-size: 20px;
+    background-color: #313440;
+  }
+
+  .bot {
+    width: 100px;
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    cursor: pointer;
+  }
+}
+
+@media (min-width: 2500px) {
+  .chatbox > div > .message-container {
+    height: calc(85%);
+    overflow-x: hidden;
+    margin-bottom: 8px;
+    padding: 0 16px;
+    margin-top: 16px;
+    box-shadow: 0px 5px 10px 0 #292c39;
+    font-size: 25px;
+  }
+
+  .maximise {
+    height: calc(91%) !important;
+  }
+
+  .bot {
+    width: 150px;
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    cursor: pointer;
+  }
+
+  .chatbox {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    max-width: 768px;
+    height: 60%;
+    min-height: 64px;
+    padding-bottom: 16px;
+    background-color: #313440;
+  }
+}
